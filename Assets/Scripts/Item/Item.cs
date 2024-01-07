@@ -19,9 +19,3 @@ public class Item : ScriptableObject
     public List<Sprite> BodyParts => _bodyParts;
     public EquipmentType EquipmentType => _equipmentType;
 }
-
-public enum EquipmentType
-{
-    Head,
-    Chest
-}

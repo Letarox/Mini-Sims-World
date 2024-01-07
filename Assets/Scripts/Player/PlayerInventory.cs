@@ -8,7 +8,6 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] private EquippedItem _equippedHead, _equippedChest;
     [SerializeField] private List<Sprite> _defaultHeadGear, _defaultChestGear;
     [SerializeField] private List<Item> _inventory = new();
-    private UIManager _uiManager;
     private bool _isBuying = false;
     public List<Item> Inventory => _inventory;
     public int Gold => _gold;
@@ -25,9 +24,8 @@ public class PlayerInventory : MonoBehaviour
 
     private void Start()
     {
-        _uiManager = UIManager.Instance;
-        _uiManager.SetPlayer(this);
-        _uiManager.UpdatePlayerGoldDisplay(_gold);
+        UIManager.Instance.SetPlayer(this);
+        UIManager.Instance.UpdatePlayerGoldDisplay(_gold);
     }
 
     private void Update()
@@ -35,14 +33,15 @@ public class PlayerInventory : MonoBehaviour
         //Press I to open the Inventory
         if (!_isBuying && Input.GetKeyDown(KeyCode.I))
         {
-            _uiManager.OpenInventoryManagement();
+            UIManager.Instance.OpenInventoryManagement();
         }
         //Press ESC to close the inventory
         if(Input.GetKeyDown(KeyCode.Escape) && GameManager.Instance.CurrentActionState == ActionState.Inventory)
         {
-            _uiManager.LeaveInventory();
+            UIManager.Instance.LeaveInventory();
         }
     }
+
     #region Store Management
     public bool CanSellItem(Item item)
     {
@@ -56,7 +55,7 @@ public class PlayerInventory : MonoBehaviour
         {
             _gold -= item.CostAmount;
             _inventory.Add(item);
-            _uiManager.UpdatePlayerGoldDisplay(_gold);
+            UIManager.Instance.UpdatePlayerGoldDisplay(_gold);
             return true;
         }
         else
@@ -72,7 +71,7 @@ public class PlayerInventory : MonoBehaviour
         {
             _gold += item.SellAmount;
             _inventory.Remove(item);
-            _uiManager.UpdatePlayerGoldDisplay(_gold);
+            UIManager.Instance.UpdatePlayerGoldDisplay(_gold);
         }
     }
 
@@ -81,6 +80,7 @@ public class PlayerInventory : MonoBehaviour
         _isBuying = active;
     }
     #endregion
+
     #region Equip Items
     public void UpdatePlayerEquipment(EquippedItem equippedItem, List<Sprite> newSprites)
     {
@@ -109,6 +109,7 @@ public class PlayerInventory : MonoBehaviour
             case EquipmentType.Chest:
                 CheckAndEquipItem(ref _equippedChest, item, _defaultChestGear);
                 break;
+                //Additional cases for EquipmentTypes if needed
         }
     }
 

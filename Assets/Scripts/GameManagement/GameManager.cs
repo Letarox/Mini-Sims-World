@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
+    
     public static GameManager Instance
     {
         get
@@ -16,15 +17,16 @@ public class GameManager : MonoBehaviour
             return _instance;
         }
     }
+    private void Awake()
+    {
+        _instance = this;
+    }
 
     private ActionState _currentActionState;
 
     public ActionState CurrentActionState => _currentActionState;
 
-    private void Awake()
-    {
-        _instance = this;
-    }
+    
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape) && _currentActionState == ActionState.None)
@@ -44,4 +46,9 @@ public enum ActionState
     Buy,
     Sell,
     Inventory
+}
+public enum EquipmentType
+{
+    Head,
+    Chest
 }

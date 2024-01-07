@@ -6,7 +6,26 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    public static UIManager Instance;
+    #region Singleton
+    private static UIManager _instance;
+
+    public static UIManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+                Debug.LogError(typeof(UIManager).ToString() + " is NULL");
+
+            return _instance;
+        }
+    }
+
+    private void Awake()
+    {
+        _instance = this;
+    }
+    #endregion
+
     [SerializeField] GameObject _backgroundPanel,_shopActionList, _itemShopList, _inventoryList, _shopHeader, _inventoryHeader, _shopContainer, _inventoryContainer;
     [SerializeField] GameObject _itemTemplatePrefab;
     [SerializeField] TextMeshProUGUI _playerGold,_proximityMessage, _actionText;
@@ -16,13 +35,8 @@ public class UIManager : MonoBehaviour
     private Shop _shop; 
     public static event Action<Item> OnItemAction;
     public PlayerInventory PlayerInventory => _playerInventory;
+
     #region Initialization
-
-    private void Awake()
-    {
-        Instance = this;
-    }
-
     public void SetShop(Shop shop)
     {
         _shop = shop;
@@ -133,6 +147,7 @@ public class UIManager : MonoBehaviour
         _backgroundPanel.SetActive(true);
         _shopActionList.SetActive(true);
         _shopHeader.SetActive(true);
+
         SetProximityMessage(false);
         GameManager.Instance.SetActionState(state);
     }
@@ -143,6 +158,7 @@ public class UIManager : MonoBehaviour
         _shopActionList.SetActive(false);
         _itemShopList.SetActive(true);
         _shopHeader.SetActive(true);
+
         SetShopItemsData(items);
         GameManager.Instance.SetActionState(state);
         UpdateButtonText(state);
@@ -155,6 +171,7 @@ public class UIManager : MonoBehaviour
         _shopActionList.SetActive(false);
         _itemShopList.SetActive(false);
         _shopHeader.SetActive(false);
+
         SetProximityMessage(true);
         _shop.PlayerInventory.SetBuyStatus(false);
         GameManager.Instance.SetActionState(ActionState.None);
@@ -166,6 +183,7 @@ public class UIManager : MonoBehaviour
         _backgroundPanel.SetActive(false);
         _inventoryList.SetActive(false);
         _inventoryHeader.SetActive(false);
+
         GameManager.Instance.SetActionState(ActionState.None);
     }
 
@@ -194,11 +212,13 @@ public class UIManager : MonoBehaviour
     {
         // Open all displays for the Inventory and close previous displays if open via shop
         List<Item> items = _playerInventory.Inventory;
+
         _backgroundPanel.SetActive(true);
         _inventoryList.SetActive(true);
         _inventoryHeader.SetActive(true);
         _shopActionList.SetActive(false);
         _shopHeader.SetActive(false);
+
         SetProximityMessage(false);
         GameManager.Instance.SetActionState(ActionState.Inventory);
         SetInventoryItemsData(items);
