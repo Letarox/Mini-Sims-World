@@ -25,6 +25,13 @@ public class GameManager : MonoBehaviour
     {
         _instance = this;
     }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) && _currentActionState == ActionState.None)
+        {
+            Application.Quit();
+        }
+    }
     public void SetActionState(ActionState newState)
     {
         _currentActionState = newState;
