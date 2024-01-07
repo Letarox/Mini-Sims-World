@@ -32,7 +32,7 @@ public class ItemSlotUI : MonoBehaviour
         {
             if (GameManager.Instance.CurrentActionState != ActionState.Inventory)
             {
-                bool isInBuyMode = GameManager.Instance.CurrentActionState == ActionState.Buy ? true : false;
+                bool isInBuyMode = GameManager.Instance.CurrentActionState == ActionState.Buy;
                 if(OnButtonClick != null)
                     OnButtonClick?.Invoke(_item, isInBuyMode);
             }
