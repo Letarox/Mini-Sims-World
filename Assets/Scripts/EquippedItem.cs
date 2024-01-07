@@ -19,4 +19,4 @@ public class EquippedItem
         get { return _visualReference; }
         set { _visualReference = value; }
     }
-}   
+}

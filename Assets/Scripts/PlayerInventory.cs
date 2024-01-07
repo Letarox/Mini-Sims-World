@@ -5,18 +5,13 @@ using UnityEngine;
 public class PlayerInventory : MonoBehaviour
 {
     private int _gold = 300;
-
-    [SerializeField] private List<Item> _inventory = new List<Item>();
+    [SerializeField] private EquippedItem _equippedHead, _equippedChest;
+    [SerializeField] private Sprite _defaultHeadGear, _defaultChestGear;
+    [SerializeField] private List<Item> _inventory = new();
     private UIManager _uiManager;
     private bool _isBuying = false;
-
-    [SerializeField] private EquippedItem _equippedHead;
-    [SerializeField] private EquippedItem _equippedChest;
-
-    [SerializeField] private Sprite _defaultHeadGear;
-    [SerializeField] private Sprite _defaultChestGear;
-
     public List<Item> Inventory => _inventory;
+    public int Gold => _gold;
 
     private void OnEnable()
     {
@@ -37,17 +32,18 @@ public class PlayerInventory : MonoBehaviour
 
     private void Update()
     {
+        //Press I to open the Inventory
         if (!_isBuying && Input.GetKeyDown(KeyCode.I))
         {
-            _uiManager.OpenInventoryManagement(_inventory);
+            _uiManager.OpenInventoryManagement();
         }
-
+        //Press ESC to close the inventory
         if(Input.GetKeyDown(KeyCode.Escape) && GameManager.Instance.CurrentActionState == ActionState.Inventory)
         {
             _uiManager.LeaveInventory();
         }
     }
-
+    #region Store Management
     public bool CanSellItem(Item item)
     {
         return _inventory.Contains(item);
@@ -55,6 +51,7 @@ public class PlayerInventory : MonoBehaviour
 
     public bool BuyItem(Item item)
     {
+        //check if we have the gold to buy it, them deduct the gold and grant the item
         if (_gold >= item.CostAmount)
         {
             _gold -= item.CostAmount;
@@ -70,6 +67,7 @@ public class PlayerInventory : MonoBehaviour
 
     public void SellItem(Item item)
     {
+        //check if we have the item, them remove and add the gold
         if (_inventory.Contains(item))
         {
             _gold += item.SellAmount;
@@ -82,7 +80,8 @@ public class PlayerInventory : MonoBehaviour
     {
         _isBuying = active;
     }
-
+    #endregion
+    #region Equip Items
     public void UpdatePlayerEquipment(EquippedItem equippedItem, Sprite newSprite)
     {
         equippedItem.VisualReference.sprite = newSprite;
@@ -128,4 +127,5 @@ public class PlayerInventory : MonoBehaviour
             _ => false,
         };
     }
+    #endregion
 }

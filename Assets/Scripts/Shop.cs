@@ -17,11 +17,12 @@ public class Shop : MonoBehaviour
     }
     private void Update()
     {
+        //Press E to open the shop (when near)
         if(Input.GetKeyDown(KeyCode.E) && _isPlayerNear)
         {
             _uiManager.OpenShopActionList(ActionState.Browsing);
         }
-
+        //Press ESC to close the shop while either browsing or buying/selling
         if(Input.GetKeyDown(KeyCode.Escape) && (GameManager.Instance.CurrentActionState != ActionState.None && GameManager.Instance.CurrentActionState != ActionState.Inventory))
         {
             _uiManager.LeaveShop();
@@ -54,6 +55,7 @@ public class Shop : MonoBehaviour
     }
     public void SellItemToPlayer(Item item, PlayerInventory player)
     {
+        //check if we have the item on our list, them buy that item for the player, remove the item from our list and update the visuals
         if (_shopItems.Contains(item))
         {
             if (player.BuyItem(item))
@@ -73,6 +75,7 @@ public class Shop : MonoBehaviour
     }
     public void BuyItemFromPlayer(Item item, PlayerInventory player)
     {
+        //check if the player has the item their inventory, them buy that item from the player, remove the item from their inventory and update the visuals
         if (player.CanSellItem(item))
         {
             player.SellItem(item);
@@ -87,6 +90,7 @@ public class Shop : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        //Checks when the player gets near our NPC
         if (other.CompareTag("Player"))
         {
             _isPlayerNear = true;
@@ -97,6 +101,7 @@ public class Shop : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
+        //Check if the player left our NPC range
         if (other.CompareTag("Player"))
         {
             _isPlayerNear = false;
