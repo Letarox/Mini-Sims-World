@@ -6,10 +6,15 @@ public class PlayerInventory : MonoBehaviour
 {
     private int _gold = 300;
 
-    [SerializeField] private List<Item> _inventory = new();
+    [SerializeField] private List<Item> _inventory = new List<Item>();
     private UIManager _uiManager;
     private bool _isBuying = false;
-    [SerializeField] private Item _equippedHeadItem, _equippedChestItem, _equippedFeetItem;
+
+    [SerializeField] private EquippedItem _equippedHead;
+    [SerializeField] private EquippedItem _equippedChest;
+
+    [SerializeField] private Sprite _defaultHeadGear;
+    [SerializeField] private Sprite _defaultChestGear;
 
     public List<Item> Inventory => _inventory;
 
@@ -17,6 +22,7 @@ public class PlayerInventory : MonoBehaviour
     {
         UIManager.OnItemAction += EquipItem;
     }
+
     private void OnDestroy()
     {
         UIManager.OnItemAction -= EquipItem;
@@ -28,17 +34,25 @@ public class PlayerInventory : MonoBehaviour
         _uiManager.SetPlayer(this);
         _uiManager.UpdatePlayerGoldDisplay(_gold);
     }
+
     private void Update()
     {
-        if(!_isBuying && Input.GetKeyDown(KeyCode.I))
+        if (!_isBuying && Input.GetKeyDown(KeyCode.I))
         {
             _uiManager.OpenInventoryManagement(_inventory);
         }
+
+        if(Input.GetKeyDown(KeyCode.Escape) && GameManager.Instance.CurrentActionState == ActionState.Inventory)
+        {
+            _uiManager.LeaveInventory();
+        }
     }
+
     public bool CanSellItem(Item item)
     {
         return _inventory.Contains(item);
     }
+
     public bool BuyItem(Item item)
     {
         if (_gold >= item.CostAmount)
@@ -69,9 +83,9 @@ public class PlayerInventory : MonoBehaviour
         _isBuying = active;
     }
 
-    public void UpdatePlayerColor(Color newColor)
+    public void UpdatePlayerEquipment(EquippedItem equippedItem, Sprite newSprite)
     {
-        gameObject.GetComponent<SpriteRenderer>().color = newColor;
+        equippedItem.VisualReference.sprite = newSprite;
     }
 
     public void EquipItem(Item item)
@@ -79,49 +93,38 @@ public class PlayerInventory : MonoBehaviour
         switch (item.EquipmentType)
         {
             case EquipmentType.Head:
-                CheckAndEquipItem(ref _equippedHeadItem, item);
+                CheckAndEquipItem(ref _equippedHead, item, _defaultHeadGear);
                 break;
             case EquipmentType.Chest:
-                CheckAndEquipItem(ref _equippedChestItem, item);
-                break;
-            case EquipmentType.Feet:
-                CheckAndEquipItem(ref _equippedFeetItem, item);
+                CheckAndEquipItem(ref _equippedChest, item, _defaultChestGear);
                 break;
         }
     }
 
-    public void CheckAndEquipItem(ref Item equippedItem, Item newItem)
+    public void CheckAndEquipItem(ref EquippedItem equippedItem, Item newItem, Sprite defaultSprite)
     {
-        if (equippedItem == null)
+        //Check if the item is null (nothing equipped) or if its different
+        if (equippedItem == null || equippedItem.ItemEquipped != newItem)
         {
-            equippedItem = newItem;
-            UpdatePlayerColor(equippedItem.MyColor);
-            UIManager.Instance.UpdateButtonText(GameManager.Instance.CurrentActionState);
+            equippedItem.ItemEquipped = newItem;
+            UpdatePlayerEquipment(equippedItem, newItem.Icon);
         }
         else
         {
-            if (equippedItem == newItem)
-            {
-                equippedItem = null;
-                UpdatePlayerColor(Color.white);
-                UIManager.Instance.UpdateButtonText(GameManager.Instance.CurrentActionState);
-            }
-            else
-            {
-                equippedItem = newItem;
-                UpdatePlayerColor(equippedItem.MyColor);
-                UIManager.Instance.UpdateButtonText(GameManager.Instance.CurrentActionState);
-            }
+            equippedItem.ItemEquipped = null;
+            UpdatePlayerEquipment(equippedItem, defaultSprite);
         }
+
+        UIManager.Instance.UpdateButtonText(GameManager.Instance.CurrentActionState);
     }
 
     public bool CheckIfItemEquipped(Item item)
     {
+        //returns true if the item equipped matches the provided item
         return item.EquipmentType switch
         {
-            EquipmentType.Head => item == _equippedHeadItem,
-            EquipmentType.Chest => item == _equippedChestItem,
-            EquipmentType.Feet => item == _equippedFeetItem,
+            EquipmentType.Head => item == _equippedHead.ItemEquipped,
+            EquipmentType.Chest => item == _equippedChest.ItemEquipped,
             _ => false,
         };
     }

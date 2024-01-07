@@ -48,7 +48,7 @@ public class UIManager : MonoBehaviour
 
         foreach (Item item in items)
         {
-            if (!_playerInventory.CheckIfItemEquipped(item))
+            if (_playerInventory != null && !_playerInventory.CheckIfItemEquipped(item))
             {
                 GameObject newItemSlotObject = Instantiate(_itemTemplatePrefab, _shopContainer.transform);
                 ItemSlotUI newItemSlot = newItemSlotObject.GetComponent<ItemSlotUI>();
@@ -90,23 +90,26 @@ public class UIManager : MonoBehaviour
     {
         if (isBuying)
         {
-            _shop.SellItemToPlayer(item, _shop.PlayerInventory);
+            if(_shop != null)
+                _shop.SellItemToPlayer(item, _shop.PlayerInventory);
         }
         else
         {
-            _shop.BuyItemFromPlayer(item, _shop.PlayerInventory);
+            if (_shop != null)
+                _shop.BuyItemFromPlayer(item, _shop.PlayerInventory);
         }
     }
     private void HandleItemEquipButtonClick(Item item)
     {
         EquipOrUnequipItem(item);
     }
-    public void OpenShopActionList()
+    public void OpenShopActionList(ActionState state)
     {
         _backgroundPanel.SetActive(true);
         _shopActionList.SetActive(true);
         _shopHeader.SetActive(true);
         SetProximityMessage(false);
+        GameManager.Instance.SetActionState(state);
     }
     public void OpenShopUI(List<Item> items, ActionState state)
     {
@@ -164,6 +167,7 @@ public class UIManager : MonoBehaviour
 
     private void EquipOrUnequipItem(Item item)
     {
-        OnItemAction?.Invoke(item);
+        if(OnItemAction != null)
+            OnItemAction?.Invoke(item);
     }
 }

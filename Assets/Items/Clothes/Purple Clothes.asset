@@ -10,12 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b8f786d4ad6c62d4bb47bdb4b84a1d2f, type: 3}
-  m_Name: Red Clothes
+  m_Name: Purple Clothes
   m_EditorClassIdentifier: 
-  _name: Red Clothes
+  _name: Purple Clothes
   _costAmount: 50
   _sellAmount: 25
-  _icon: {fileID: 0}
+  _icon: {fileID: 21300000, guid: fff248787aa9dc44d819b77a6686c0af, type: 3}
   _color: {r: 1, g: 0.18689731, b: 0.051886797, a: 1}
-  _isEquipped: 0
   _equipmentType: 1

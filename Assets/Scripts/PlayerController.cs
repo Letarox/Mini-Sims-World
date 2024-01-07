@@ -7,14 +7,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _speed = 4f;
     private void Update()
     {
-        if(GameManager.Instance.CurrentActionState != ActionState.None)
-        {
+        if(GameManager.Instance == null || GameManager.Instance.CurrentActionState != ActionState.None)
             return;
-        }
-        else
-        {
-            ApplyMovement();
-        }
+        
+        ApplyMovement();
     }
 
     private void ApplyMovement()

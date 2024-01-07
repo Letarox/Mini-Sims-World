@@ -5,7 +5,17 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance;
+    private static GameManager _instance;
+    public static GameManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+                Debug.LogError(typeof(GameManager).ToString() + " is NULL");
+
+            return _instance;
+        }
+    }
 
     private ActionState _currentActionState;
 
@@ -13,14 +23,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        _instance = this;
     }
     public void SetActionState(ActionState newState)
     {
@@ -30,6 +33,7 @@ public class GameManager : MonoBehaviour
 public enum ActionState
 {
     None,
+    Browsing,
     Buy,
     Sell,
     Inventory

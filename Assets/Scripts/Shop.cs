@@ -19,20 +19,27 @@ public class Shop : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.E) && _isPlayerNear)
         {
-            _uiManager.OpenShopActionList();
+            _uiManager.OpenShopActionList(ActionState.Browsing);
+        }
+
+        if(Input.GetKeyDown(KeyCode.Escape) && (GameManager.Instance.CurrentActionState != ActionState.None && GameManager.Instance.CurrentActionState != ActionState.Inventory))
+        {
+            _uiManager.LeaveShop();
         }
     }
 
     public void OpenBuyShop()
     {
         _uiManager.OpenShopUI(_shopItems, ActionState.Buy);
-        _playerInventory.SetBuyStatus(true);
+        if(_playerInventory != null)
+            _playerInventory.SetBuyStatus(true);
     }
 
     public void OpenSellShop()
     {
         _uiManager.OpenShopUI(_playerInventory.Inventory, ActionState.Sell);
-        _playerInventory.SetBuyStatus(true);
+        if (_playerInventory != null)
+            _playerInventory.SetBuyStatus(true);
     }
     public void HandleItemButtonClick(Item item, bool isBuying)
     {
@@ -70,7 +77,8 @@ public class Shop : MonoBehaviour
         {
             player.SellItem(item);
             _shopItems.Add(item);
-            _uiManager.SetShopItemsData(_playerInventory.Inventory);
+            if (_playerInventory != null)
+                _uiManager.SetShopItemsData(_playerInventory.Inventory);
             _uiManager.UpdateButtonText(GameManager.Instance.CurrentActionState);
             string message = $"You sold {item.Name}!";
             StartCoroutine(_uiManager.ActionItemRoutine(message));

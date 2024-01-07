@@ -10,12 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b8f786d4ad6c62d4bb47bdb4b84a1d2f, type: 3}
-  m_Name: Yellow Hat
+  m_Name: Green Hood
   m_EditorClassIdentifier: 
-  _name: Yellow Hat
-  _costAmount: 20
-  _sellAmount: 10
-  _icon: {fileID: 0}
-  _color: {r: 1, g: 0.8795767, b: 0, a: 1}
-  _isEquipped: 0
+  _name: Green Hood
+  _costAmount: 30
+  _sellAmount: 15
+  _icon: {fileID: 21300000, guid: f7e7bed775fff8347b9e53c67e20875f, type: 3}
   _equipmentType: 0

@@ -23,8 +23,7 @@ public class ItemSlotUI : MonoBehaviour
         _item = item;
         _nameText.text = item.Name;
         _goldText.text = "Cost: " + item.CostAmount;
-        _icon.color = item.MyColor;
-        //_icon.sprite = item.Icon.sprite;
+        _icon.sprite = item.Icon;
     }
     private void OnItemClick()
     {
@@ -33,11 +32,13 @@ public class ItemSlotUI : MonoBehaviour
             if (GameManager.Instance.CurrentActionState != ActionState.Inventory)
             {
                 bool isInBuyMode = GameManager.Instance.CurrentActionState == ActionState.Buy ? true : false;
-                OnButtonClick?.Invoke(_item, isInBuyMode);
+                if(OnButtonClick != null)
+                    OnButtonClick?.Invoke(_item, isInBuyMode);
             }
             else
             {
-                OnItemEquipClick?.Invoke(_item);
+                if(OnItemEquipClick != null)
+                    OnItemEquipClick?.Invoke(_item);
             }
         }
     }
@@ -45,12 +46,17 @@ public class ItemSlotUI : MonoBehaviour
     {
         if (_button != null)
         {
-            if(state != ActionState.Inventory)
+            if (state != ActionState.Inventory)
+            {
                 _buttonText.text = state == ActionState.Buy ? "BUY" : "SELL";
+            }
             else
             {
-                _buttonText.text = UIManager.Instance.PlayerInventory.CheckIfItemEquipped(_item) ? "UNEQUIP" : "EQUIP";
-                _buttonText.fontSize = 12f;
+                if (_item != null && UIManager.Instance != null && UIManager.Instance.PlayerInventory != null)
+                {
+                    _buttonText.text = UIManager.Instance.PlayerInventory.CheckIfItemEquipped(_item) ? "UNEQUIP" : "EQUIP";
+                    _buttonText.fontSize = 12f;
+                }
             }
         }
     }
