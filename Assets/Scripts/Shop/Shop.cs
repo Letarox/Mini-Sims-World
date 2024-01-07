@@ -18,7 +18,7 @@ public class Shop : MonoBehaviour
     private void Update()
     {
         //Press E to open the shop (when near)
-        if(Input.GetKeyDown(KeyCode.E) && _isPlayerNear)
+        if(Input.GetKeyDown(KeyCode.E) && _isPlayerNear && GameManager.Instance.CurrentActionState == ActionState.None)
         {
             _uiManager.OpenShopActionList(ActionState.Browsing);
         }
