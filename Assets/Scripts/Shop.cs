@@ -6,29 +6,33 @@ using UnityEngine;
 public class Shop : MonoBehaviour
 {
     [SerializeField] private List<Item> _shopItems = new();
+    private UIManager _uiManager;
     private bool _isPlayerNear = false;
     private PlayerInventory _playerInventory;
     public PlayerInventory PlayerInventory => _playerInventory;
     private void Start()
     {
-        UIManager.Instance.SetShop(this);
+        _uiManager = UIManager.Instance;
+        _uiManager.SetShop(this);
     }
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.E) && _isPlayerNear)
         {
-            UIManager.Instance.OpenShopActionList();
+            _uiManager.OpenShopActionList();
         }
     }
 
     public void OpenBuyShop()
     {
-        UIManager.Instance.OpenShopUI(_shopItems, true);
+        _uiManager.OpenShopUI(_shopItems, ActionState.Buy);
+        _playerInventory.SetBuyStatus(true);
     }
 
     public void OpenSellShop()
     {
-        UIManager.Instance.OpenShopUI(_playerInventory.Inventory, false);
+        _uiManager.OpenShopUI(_playerInventory.Inventory, ActionState.Sell);
+        _playerInventory.SetBuyStatus(true);
     }
     public void HandleItemButtonClick(Item item, bool isBuying)
     {
@@ -48,15 +52,15 @@ public class Shop : MonoBehaviour
             if (player.BuyItem(item))
             {
                 _shopItems.Remove(item);
-                UIManager.Instance.SetItemsData(_shopItems);
-                UIManager.Instance.SetBuyMode(UIManager.Instance.IsInBuyMode);
+                _uiManager.SetShopItemsData(_shopItems);
+                _uiManager.UpdateButtonText(GameManager.Instance.CurrentActionState);
                 string message = $"You bought {item.Name}!";
-                StartCoroutine(UIManager.Instance.ActionItemRoutine(message));
+                StartCoroutine(_uiManager.ActionItemRoutine(message));
             }
             else
             {
                 string message = $"You can't buy {item.Name}!";
-                StartCoroutine(UIManager.Instance.ActionItemRoutine(message));
+                StartCoroutine(_uiManager.ActionItemRoutine(message));
             }
         }
     }
@@ -66,10 +70,10 @@ public class Shop : MonoBehaviour
         {
             player.SellItem(item);
             _shopItems.Add(item);
-            UIManager.Instance.SetItemsData(_playerInventory.Inventory);
-            UIManager.Instance.SetBuyMode(UIManager.Instance.IsInBuyMode);
+            _uiManager.SetShopItemsData(_playerInventory.Inventory);
+            _uiManager.UpdateButtonText(GameManager.Instance.CurrentActionState);
             string message = $"You sold {item.Name}!";
-            StartCoroutine(UIManager.Instance.ActionItemRoutine(message));
+            StartCoroutine(_uiManager.ActionItemRoutine(message));
         }
     }
 
@@ -79,7 +83,7 @@ public class Shop : MonoBehaviour
         {
             _isPlayerNear = true;
             _playerInventory = other.gameObject.GetComponent<PlayerInventory>();
-            UIManager.Instance.SetProximityMessage(true);
+            _uiManager.SetProximityMessage(true);
         }
     }
 
@@ -89,7 +93,7 @@ public class Shop : MonoBehaviour
         {
             _isPlayerNear = false;
             _playerInventory = null;
-            UIManager.Instance.SetProximityMessage(false);
+            _uiManager.SetProximityMessage(false);
         }
     }
 }

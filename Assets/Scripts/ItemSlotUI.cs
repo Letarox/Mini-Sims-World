@@ -12,6 +12,7 @@ public class ItemSlotUI : MonoBehaviour
     [SerializeField] Button _button;
     private Item _item;
     public event Action<Item, bool> OnButtonClick;
+    public event Action<Item> OnItemEquipClick;
     public Item Item => _item;
     private void Start()
     {
@@ -29,15 +30,28 @@ public class ItemSlotUI : MonoBehaviour
     {
         if (_item != null)
         {
-            bool isInBuyMode = UIManager.Instance.IsInBuyMode;
-            OnButtonClick?.Invoke(_item, isInBuyMode);
+            if (GameManager.Instance.CurrentActionState != ActionState.Inventory)
+            {
+                bool isInBuyMode = GameManager.Instance.CurrentActionState == ActionState.Buy ? true : false;
+                OnButtonClick?.Invoke(_item, isInBuyMode);
+            }
+            else
+            {
+                OnItemEquipClick?.Invoke(_item);
+            }
         }
     }
-    public void UpdateButtonMode(bool isInBuyMode)
+    public void UpdateButtonMode(ActionState state)
     {
         if (_button != null)
         {
-            _buttonText.text = isInBuyMode ? "BUY" : "SELL";
+            if(state != ActionState.Inventory)
+                _buttonText.text = state == ActionState.Buy ? "BUY" : "SELL";
+            else
+            {
+                _buttonText.text = UIManager.Instance.PlayerInventory.CheckIfItemEquipped(_item) ? "UNEQUIP" : "EQUIP";
+                _buttonText.fontSize = 12f;
+            }
         }
     }
 }

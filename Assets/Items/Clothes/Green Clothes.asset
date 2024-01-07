@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Green Clothes
   m_EditorClassIdentifier: 
   _name: Green Clothes
-  _costAmount: 100
-  _sellAmount: 50
+  _costAmount: 60
+  _sellAmount: 30
   _icon: {fileID: 0}
   _color: {r: 0.28613687, g: 1, b: 0, a: 1}
+  _isEquipped: 0
+  _equipmentType: 1
