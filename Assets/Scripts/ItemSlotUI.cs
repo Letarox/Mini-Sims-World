@@ -48,7 +48,7 @@ public class ItemSlotUI : MonoBehaviour
         //Update the button text according to either buying/selling or equipping and unequipping
         if (_goldText != null)
         {
-            if (state != ActionState.Inventory)
+            if (state == ActionState.Buy)
             {
                 _goldText.text = $"Cost: {_item.CostAmount}";
             }
