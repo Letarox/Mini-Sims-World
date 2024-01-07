@@ -6,7 +6,7 @@ using UnityEngine;
 public class EquippedItem
 {
     [SerializeField] private Item _equippedItem;
-    [SerializeField] private SpriteRenderer _visualReference;
+    [SerializeField] private List<SpriteRenderer> _visualReferences;
 
     public Item ItemEquipped
     {
@@ -14,9 +14,9 @@ public class EquippedItem
         set { _equippedItem = value; }
     }
 
-    public SpriteRenderer VisualReference
+    public List<SpriteRenderer> VisualReferences
     {
-        get { return _visualReference; }
-        set { _visualReference = value; }
+        get => _visualReferences;
+        set { _visualReferences = value; }
     }
 }

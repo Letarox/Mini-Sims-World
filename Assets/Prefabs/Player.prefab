@@ -1422,15 +1422,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ba1092afd5ac942adbc0875adcf518, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inventory: []
   _equippedHead:
     _equippedItem: {fileID: 0}
-    _visualReference: {fileID: 1532468373882321559}
+    _visualReferences:
+    - {fileID: 1532468373882321559}
   _equippedChest:
     _equippedItem: {fileID: 0}
-    _visualReference: {fileID: 1532468373291267367}
-  _defaultHeadGear: {fileID: 21300000, guid: 468244f274f38f64b85773c7888444b6, type: 3}
-  _defaultChestGear: {fileID: 21300000, guid: 215dd6c48c732d744aecd29e7fecbbfa, type: 3}
+    _visualReferences:
+    - {fileID: 1532468373291267367}
+    - {fileID: 1532468373577007515}
+  _defaultHeadGear:
+  - {fileID: 21300000, guid: 468244f274f38f64b85773c7888444b6, type: 3}
+  _defaultChestGear:
+  - {fileID: 21300000, guid: 215dd6c48c732d744aecd29e7fecbbfa, type: 3}
+  - {fileID: 21300000, guid: c376d5b80d02ffe4ba89fd03d60ec471, type: 3}
+  _inventory: []
 --- !u!50 &1532468373919959271
 Rigidbody2D:
   serializedVersion: 4

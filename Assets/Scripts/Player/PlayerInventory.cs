@@ -6,7 +6,7 @@ public class PlayerInventory : MonoBehaviour
 {
     private int _gold = 300;
     [SerializeField] private EquippedItem _equippedHead, _equippedChest;
-    [SerializeField] private Sprite _defaultHeadGear, _defaultChestGear;
+    [SerializeField] private List<Sprite> _defaultHeadGear, _defaultChestGear;
     [SerializeField] private List<Item> _inventory = new();
     private UIManager _uiManager;
     private bool _isBuying = false;
@@ -82,9 +82,21 @@ public class PlayerInventory : MonoBehaviour
     }
     #endregion
     #region Equip Items
-    public void UpdatePlayerEquipment(EquippedItem equippedItem, Sprite newSprite)
+    public void UpdatePlayerEquipment(EquippedItem equippedItem, List<Sprite> newSprites)
     {
-        equippedItem.VisualReference.sprite = newSprite;
+        //Null check for return
+        if (equippedItem == null || newSprites == null || newSprites.Count == 0)
+        {
+            return;
+        }
+
+        //Minimum count between the VisualReferences and newSprites lists so we can iterate through
+        int minCount = Mathf.Min(equippedItem.VisualReferences.Count, newSprites.Count);
+
+        for (int i = 0; i < minCount; i++)
+        {
+            equippedItem.VisualReferences[i].sprite = newSprites[i];
+        }
     }
 
     public void EquipItem(Item item)
@@ -100,13 +112,18 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
-    public void CheckAndEquipItem(ref EquippedItem equippedItem, Item newItem, Sprite defaultSprite)
+    public void CheckAndEquipItem(ref EquippedItem equippedItem, Item newItem, List<Sprite> defaultSprite)
     {
-        //Check if the item is null (nothing equipped) or if its different
-        if (equippedItem == null || equippedItem.ItemEquipped != newItem)
+        if (equippedItem == null)
+        {
+            equippedItem = new EquippedItem();
+        }
+
+        // Check if the item is null (nothing equipped) or if it's different
+        if (equippedItem.ItemEquipped != newItem)
         {
             equippedItem.ItemEquipped = newItem;
-            UpdatePlayerEquipment(equippedItem, newItem.Icon);
+            UpdatePlayerEquipment(equippedItem, newItem.BodyParts);
         }
         else
         {

@@ -16,5 +16,7 @@ MonoBehaviour:
   _costAmount: 50
   _sellAmount: 25
   _icon: {fileID: 21300000, guid: fff248787aa9dc44d819b77a6686c0af, type: 3}
-  _color: {r: 1, g: 0.18689731, b: 0.051886797, a: 1}
+  _bodyParts:
+  - {fileID: 21300000, guid: fff248787aa9dc44d819b77a6686c0af, type: 3}
+  - {fileID: 21300000, guid: f5e38fc0746afdb408f3af29c6c737cc, type: 3}
   _equipmentType: 1
